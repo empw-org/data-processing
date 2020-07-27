@@ -1,6 +1,11 @@
 import pandas as pd
 from datetime import date
 import requests
+import os
+
+BASE_URL = os.environ['EMPW_API_BASE_URL']
+ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
+ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
 
 
 def get_day(row):
@@ -20,11 +25,35 @@ def query_by_date(data, fromYear, fromMonth, fromDay, toYear, toMonth, toDay):
                 & (data["date"] < pd.Timestamp(date(toYear, toMonth, toDay)))]
 
 
+def get_admin_token():
+    url = '{}/admins/login'.format(BASE_URL)
+    response = requests.post(
+        url, data={"email": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
+    json = response.json()
+    if response.ok:
+        return json['token']
+    else:
+        print(json)
+        raise Exception(
+            '[Get Admin Token] Got {}'.format(response.status_code))
+
+
 def get_data():
-    requests.get('')
+    token = get_admin_token()
+    url = '{}/consumption_reports'.format(BASE_URL)
+    response = requests.get(
+        url, headers={'authorization': 'bearer {}'.format(token)})
+
+    json = response.json()
+    if response.ok:
+        return json
+    else:
+        print(json)
+        raise Exception('[Get Data] Got {}'.format(response.status_code))
 
 
 if __name__ == "__main__":
+
     data = pd.read_excel("input.xlsx")
     data = data.set_index('entry_id')
 
