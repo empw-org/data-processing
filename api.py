@@ -1,10 +1,14 @@
-import requests
 import os
+
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def get_admin_token():
     print('[get_admin_token] Started')
-    url = '{}/admins/login'.format(BASE_URL)
+    url = '{}/admins/login'.format(API_BASE_URL)
     response = requests.post(
         url, json={"email": ADMIN_EMAIL, "password": ADMIN_PASSWORD})
     json = response.json()
@@ -18,7 +22,7 @@ def get_admin_token():
 
 def get_consumption_data():
     print('[get_consumption_data] Started')
-    url = '{}/consumption_data'.format(BASE_URL)
+    url = '{}/consumption_data'.format(API_BASE_URL)
     response = requests.get(
         url, headers={'authorization': 'bearer {}'.format(TOKEN)})
 
@@ -34,7 +38,7 @@ def get_consumption_data():
 def send_consumption_reports(reports):
     print('[send_consumption_reports] Started')
 
-    url = '{}/consumption_reports'.format(BASE_URL)
+    url = '{}/consumption_reports'.format(API_BASE_URL)
 
     response = requests.post(
         url,
@@ -48,7 +52,7 @@ def send_consumption_reports(reports):
             '[send_consumption_reports] Failed! Got {}'.format(response.status_code))
 
 
-BASE_URL = os.environ['EMPW_API_BASE_URL']
+API_BASE_URL = os.environ['API_BASE_URL']
 ADMIN_EMAIL = os.environ['ADMIN_EMAIL']
 ADMIN_PASSWORD = os.environ['ADMIN_PASSWORD']
 TOKEN = get_admin_token()

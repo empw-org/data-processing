@@ -28,6 +28,8 @@ if __name__ == "__main__":
     consumption_data = api.get_consumption_data()
     consumption_reports = []
     print('[processing data] Started')
+    print('[processing data] Processing data from {} sensors'
+          .format(len(consumption_data)))
     start = timer()
 
     for sensor_data in consumption_data:

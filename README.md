@@ -1,6 +1,8 @@
 # EMPW - Data Science
 
-## First Step
+## Data Processing Steps
+
+### First Step
 
 - The admin creates a new sensor.
 - The user links the created sensor to his account.
@@ -13,7 +15,7 @@
 }
 ```
 
-## Second Step
+### Second Step
 
 A script is scheduled to run every day and gets the consumption data for every registered sensor from the API.
 
@@ -81,6 +83,36 @@ The script processes the data and returns back to the API the consumption statis
 
 This data is stored and provided to the users.
 
-## Third step
+### Third step
 
 In the frontend(web/mobile), the users sees charts and statistics for his/her water consumption.
+
+## Running the script
+
+The script needs _python3_ installed.
+
+```shell
+pip3 install -r requirements.txt
+```
+
+```shell
+cp .example.env .env # copies .example.env to .env
+```
+
+Open `.env` file and provide values for the required environment variables.
+
+```shell
+API_BASE_URL=https://api.example.com
+ADMIN_EMAIL=admin@admin.com
+ADMIN_PASSWORD=password
+```
+
+Run the script
+
+```shell
+python3 main.py
+```
+
+## Deployment
+
+The script can be deployed to [Heroku](https://heroku.com) to make use of [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler). The script runs everyday at **midnight**, exactly at _12:30_ AM. The script requests the consumption data from the API. The API returns the consumption data of the previous day. The script processes the data and returns the consumption reports to the API.
